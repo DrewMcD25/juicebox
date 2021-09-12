@@ -222,6 +222,17 @@ async function createTags(tagList) {
 
     // select all tags where the name is in our taglist
     // return the rows from the query
+        await client.query(`
+        INSERT INTO tags(name)
+        VALUES (${insertValues})
+        ON CONFLICT (name) DO NOTHING;
+    `, tagList);
+    const { rows } = await client.query(`
+        SELECT * FROM tags
+        WHERE name
+        IN (${selectValues});
+    `, tagList);
+    return rows;
   } catch (error) {
     throw error;
   }
@@ -253,6 +264,15 @@ async function addTagsToPost(postId, tagList) {
   }
 }
 
+async function getAllTags() {
+    try {
+        const { rows } = await client.query(`SELECT * FROM tags;`);
+        return rows;
+    } catch (error) {
+        throw error;
+    }
+}
+
 module.exports = {  
   client,
   createUser,
@@ -266,5 +286,6 @@ module.exports = {
   addTagsToPost,
   createTags,
   createPostTag,
-  getPostById
+  getPostById,
+  getAllTags
 }
