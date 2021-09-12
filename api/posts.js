@@ -8,10 +8,10 @@ postsRouter.use((req, res, next)=> {
 })
 
 postsRouter.get('/', async (req, res)=>{
-    const Posts = await getAllPosts()
+    const posts = await getAllPosts()
 
     res.send({
-        "posts":[]
+        posts
     })
 })
 
